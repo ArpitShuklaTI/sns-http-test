@@ -21,5 +21,5 @@ from app import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/list', views.list_users),
-    path('/sns', views.receive_sns_notification)
+    path('sns/', views.receive_sns_notification)
 ]
