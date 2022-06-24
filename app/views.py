@@ -34,6 +34,7 @@ def receive_sns_notification(request):
             print('Subscription confirmed')
         else:
             print("SNS notification received")
+            print(payload)
             message = json.loads(payload.get('Message'))
             print(f'Message type: {message_type}, SNS payload: {request.body}, Payload message: {message}')
     return Response(status=status.HTTP_200_OK)
