@@ -15,9 +15,9 @@ def list_users(request):
 def receive_sns_notification(request):
     print('Started receive_sns_notification')
     print(request.headers)
-    if 'x-amz-sns-message-type' in request.META:
+    if 'X-Amz-Sns-Message-Type' in request.META:
         payload = json.loads(request.body.decode('utf-8'))
-        message_type = request.META['x-amz-sns-message-type']
+        message_type = request.META['X-Amz-Sns-Message-Type']
         if message_type == 'SubscriptionConfirmation':
             print("SubscriptionConfirmation message received")
             subscribe_url = payload.get('SubscribeURL')
