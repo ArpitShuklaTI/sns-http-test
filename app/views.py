@@ -1,5 +1,8 @@
 import json
 import requests
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -33,8 +36,13 @@ def receive_sns_notification(request):
                 )
             print('Subscription confirmed')
         else:
-            print("SNS notification received")
-            print(payload)
-            message = payload['Message']
-            print(f'Message type: {message_type}, SNS payload: {request.body}, Payload message: {message}')
+            sns_message = json.loads(payload.get('Message'))
+            meeting_id = sns_message['meetingId']
+            message = sns_message['message']
+            layer = get_channel_layer()
+            async_to_sync(layer.group_send)(meeting_id, {
+                'type': 'send_message',
+                'message': message
+            })
+            print(f"Payload meeting id: {meeting_id} && message: {message}")
     return Response(status=status.HTTP_200_OK)
